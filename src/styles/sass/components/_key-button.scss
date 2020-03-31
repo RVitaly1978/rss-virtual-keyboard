@@ -1,0 +1,95 @@
+
+.key {
+  width: 6.2%;
+  padding: 1rem 0;
+  margin-bottom: 0.5%;
+  color: $color-light;
+  background: $color-background-key-main;
+  border-radius: 4px;
+  border: 1px solid $color-border-key;
+  box-shadow: inset 0px 0px 5px $color-border-key;
+  @include font ($size: calc(1.2vw + 0.6rem), $height: 1, $weight: 400);
+  @extend %transition-hover;
+
+  @include media-hover {
+    &:hover {
+      background: $color-background-key-hover;
+      outline: none;
+    }
+  }
+  
+  &:focus {
+    outline: none;
+  }
+
+  &--backspace {
+    width: 15.5%;
+    background: $color-background-key-add;
+  }
+  
+  &--tab {
+    width: 8.5%;
+    background: $color-background-key-add;
+  }
+  
+  &--del {
+    width: 6.6%;
+    background: $color-background-key-add;
+  }
+  
+  &--capsLock {
+    width: 14.05%;
+    background: $color-background-key-add;
+  }
+  
+  &--enter {
+    width: 14.05%;
+    background: $color-background-key-add;
+  }
+  
+  &--shift-left {
+    width: 15.55%;
+    background: $color-background-key-add;
+  }
+  
+  &--shift-right {
+    width: 12.55%;
+    background: $color-background-key-add;
+  }
+  
+  &--arrow-up,
+  &--arrow-down,
+  &--arrow-left,
+  &--arrow-right {
+    background: $color-background-key-add;
+  }
+  
+  &--alt-left,
+  &--alt-right,
+  &--control-left,
+  &--control-right,
+  &--meta-left {
+    background: $color-background-key-add;
+  }
+  
+  &--space {
+    width: 48.0%;
+  }
+  
+  &:active,
+  &--active {
+    background: $color-background-key-active;
+    border-radius: 18px;
+    border: 1px solid $color-background-key-active;
+    font-weight: 700;
+    color: $color-dark;
+    @extend %transition-active;
+    outline: none;
+  }
+
+  @include media-hover {
+    &--active:hover {
+      background: $color-background-key-active;
+    }
+  }
+}
