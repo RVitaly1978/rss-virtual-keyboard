@@ -48,7 +48,7 @@ module.exports = {
      * Generates an HTML file from a template.
      */
     new HtmlWebpackPlugin({
-      favicon: paths.src + '/images/favicon.png',
+      favicon: paths.src + '/images/favicon.ico',
       template: paths.src + '/template.html', // template file
       filename: 'index.html', // output file
     }),

@@ -1,0 +1,36 @@
+
+.descriptions__container {
+  margin-top: 3rem;
+  padding: 1rem;
+  width: 55%;
+  min-width: $content-min-width;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  border-radius: 4px;
+  font-family: inherit;
+  @include font ($size: calc(1.2vw + 0.6rem), $height: 1, $weight: 400);
+  color: $color-dark;
+  background: $color-background-descriptions;
+  box-shadow: 0px 0px 5px $color-border-key;
+}
+
+.descriptions__option {
+  width: 65%;
+  padding: 0.75rem 0.25rem;
+  padding-left: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.descriptions__value {
+  width: 35%;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 0.25rem;
+  border: 1px solid $color-outline;
+  border-radius: 2px;
+  box-shadow: inset 0px 0px 5px $color-border-key;
+  font-weight: 700;
+  color: $color-outline;
+  text-align: center;
+}
