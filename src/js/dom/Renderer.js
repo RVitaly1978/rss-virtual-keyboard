@@ -1,4 +1,4 @@
-import isString from 'lodash/isString';
+import isString from '../utils/isString';
 
 class Renderer {
   constructor(root) {
@@ -7,8 +7,8 @@ class Renderer {
 
   render(Component) {
     const component = new Component();
-    this.root.appendChild(component.render());
-    component.didMount();
+    this.root.append(component.render());
+    // component.didMount();
   }
 
   static updateElement(parentNode, newChild, oldChild) {
@@ -33,9 +33,9 @@ class Renderer {
 
         if (isString(next)) {
           const textNode = document.createTextNode(next);
-          component.appendChild(textNode);
+          component.append(textNode);
         } else {
-          component.appendChild(next);
+          component.append(next);
         }
       }
     }
