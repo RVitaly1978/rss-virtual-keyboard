@@ -4,6 +4,7 @@ function Button({ params, inner = [] }) {
   const {
     idElem = '',
     classElem = '',
+    nameElem = '',
     dataKey = '',
     backgroundImgUrl = '',
     typeButton = 'button',
@@ -13,6 +14,7 @@ function Button({ params, inner = [] }) {
   const node = Renderer.createElement('button', {
     type: typeButton,
     id: idElem,
+    name: nameElem,
     'data-key': dataKey,
     style:
       backgroundImgUrl !== ''

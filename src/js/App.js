@@ -1,17 +1,15 @@
 import Renderer from './dom/Renderer';
 
 import State from './components/State';
+import Keyboard from './components/Keyboard';
 // import Button from './components/Button';
 
 import KeyboardDescriptions from './constants/KeyboardDescriptions';
-import KeyboardConfig from './constants/KeyboardConfig';
+// import KeyboardConfig from './constants/KeyboardConfig';
 import KeyboardLanguages from './constants/KeyboardLanguages';
 
 const initState = {
-  isShiftLeft: false,
-  isShiftRight: false,
-  isCtrlLeft: false,
-  isAltLeft: false,
+  isShift: false,
   isCapsLock: false,
   lang: KeyboardLanguages.ENG,
 };
@@ -47,33 +45,12 @@ class App {
       class: 'keyboard__input',
       name: 'textarea',
       cols: 60,
-      rows: 6,
+      rows: 5,
       autofocus: true,
     });
 
-    const getKeyboardKeys = () => {
-      const items = [];
-
-      Object.values(KeyboardConfig).forEach(({ name, lowerCaseEng, className }) => {
-        const button = Renderer.createElement('button', {
-          id: name,
-          type: 'button',
-          name,
-          class: className,
-          children: [lowerCaseEng],
-        });
-
-        items.push(button);
-      });
-
-      return items;
-    };
-    this.keyboardKeys = getKeyboardKeys();
-
-    this.keyboard = Renderer.createElement('div', {
-      id: 'keyboard',
-      class: 'keyboard',
-      children: this.keyboardKeys,
+    this.keyboard = new Keyboard({
+      state: this.state.getState(),
     });
 
     // this.handleLanguageSelectChange = this.handleLanguageSelectChange.bind(this);
@@ -242,7 +219,11 @@ class App {
 
     return Renderer.createElement('div', {
       class: 'main',
-      children: [this.textarea, this.keyboard, this.descriptions],
+      children: [
+        this.textarea,
+        this.keyboard.render(),
+        this.descriptions,
+      ],
     });
   }
 }
