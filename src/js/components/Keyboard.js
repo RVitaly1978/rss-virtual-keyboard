@@ -2,45 +2,58 @@
 import Renderer from '../dom/Renderer';
 import Button from './Button';
 
-import KeyboardConfig from '../constants/KeyboardConfig';
+import KeyboardLayout from '../constants/KeyboardLayout';
 
-// function colorInputElement({
-//   tooltips,
-//   classes,
-//   id,
-//   onChange,
-//   currentColor,
-// }) {
-//   const { title, placement } = tooltips;
-//   const { classList } = classes;
+import getKeyCase from '../utils/getKeyCase';
 
-//   const input = InputTypeColor({
-//     params: {
-//       idEl: id,
-//       dataTitle: title,
-//       dataPlacement: placement,
-//       classEl: classList,
-//       currentValue: currentColor,
-//     },
-//   });
+function getKeyboardKeys({ state }) {
+  const items = [];
+  const { lang } = state;
 
-//   input.addEventListener('change', (e) => {
-//     const { value } = e.target;
+  Object.keys(KeyboardLayout[lang]).forEach((key) => {
+    const { type } = KeyboardLayout[lang][key];
+    const keyCase = getKeyCase({
+      state,
+      keyType: type,
+    });
+    const keyCaseContent = KeyboardLayout[lang][key][keyCase];
 
-//     onChange({ id, value });
-//   });
+    const { className } = KeyboardLayout.EN[key];
 
-//   return input;
-// }
+    const button = Button({
+      params: {
+        idElem: key,
+        nameElem: key,
+        classElem: className,
+      },
+      inner: [keyCaseContent],
+    });
+
+    items.push(button);
+  });
+
+  return items;
+}
+
+function getKeyContent({ state, button }) {
+  const { lang } = state;
+  const { name: key } = button;
+
+  const { type } = KeyboardLayout[lang][key];
+
+  const keyCase = getKeyCase({
+    state,
+    keyType: type,
+  });
+
+  const keyCaseContent = KeyboardLayout[lang][key][keyCase];
+  return keyCaseContent;
+}
 
 class Keyboard {
   // constructor({ state, onChange }) {
   constructor({ state }) {
-    this.state = {
-      isShift: state.isShift,
-      isCapsLock: state.isCapsLock,
-      lang: state.lang,
-    };
+    this.state = { ...state };
 
     // this.onChange = onChange;
 
@@ -57,26 +70,9 @@ class Keyboard {
     //   currentColor: this.state.primaryColor,
     // });
 
-    const getKeyboardKeys = () => {
-      const items = [];
-
-      Object.values(KeyboardConfig).forEach(({ name, lowerCaseEng, className }) => {
-        const button = Button({
-          params: {
-            idElem: name,
-            nameElem: name,
-            classElem: className,
-          },
-          inner: [lowerCaseEng],
-        });
-
-        items.push(button);
-      });
-
-      return items;
-    };
-
-    this.keyboardKeys = getKeyboardKeys();
+    this.keyboardKeys = getKeyboardKeys({
+      state: this.state,
+    });
   }
 
   // handleInputChange({ id, value }) {
@@ -101,24 +97,34 @@ class Keyboard {
   //   this.onChange(this.state);
   // }
 
-  // update({ state }) {
-  //   if ((this.state.primaryColor === state.primaryColor)
-  //     && (this.state.secondaryColor === state.secondaryColor)) return;
+  updateState({ state }) {
+    const {
+      isShift: oldIsShift,
+      isCapsLock: oldIsCapsLock,
+      lang: oldLang,
+    } = this.state;
 
-  //   this.state = {
-  //     primaryColor: state.primaryColor,
-  //     secondaryColor: state.secondaryColor,
-  //   };
+    this.state = { ...state };
 
-  //   this.primaryColorInput.value = this.state.primaryColor;
-  //   this.secondaryColorInput.value = this.state.secondaryColor;
-  // }
+    if ((this.state.isShift !== oldIsShift)
+      || (this.state.isCapsLock !== oldIsCapsLock)
+      || (this.state.lang !== oldLang)) {
+      this.keyboardKeys.forEach((button) => {
+        const key = button;
+        const keyContent = getKeyContent({
+          state: this.state,
+          button: key,
+        });
+        key.textContent = keyContent;
+      });
+    }
+  }
 
   render() {
     this.keyboard = Renderer.createElement('div', {
       id: 'keyboard',
       class: 'keyboard',
-      children: this.keyboardKeys,
+      children: [...this.keyboardKeys],
     });
 
     return this.keyboard;

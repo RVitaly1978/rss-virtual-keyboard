@@ -5,7 +5,7 @@ function Button({ params, inner = [] }) {
     idElem = '',
     classElem = '',
     nameElem = '',
-    dataKey = '',
+    dataType = '',
     backgroundImgUrl = '',
     typeButton = 'button',
     tabIndex = '0',
@@ -15,7 +15,7 @@ function Button({ params, inner = [] }) {
     type: typeButton,
     id: idElem,
     name: nameElem,
-    'data-key': dataKey,
+    'data-type': dataType,
     style:
       backgroundImgUrl !== ''
         ? `background-image: url(${backgroundImgUrl})`

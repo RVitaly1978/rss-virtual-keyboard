@@ -1,7 +1,16 @@
 
-const KeyboardLanguages = {
-  ENG: 'eng',
-  RU: 'ru',
-};
+const KeyboardLanguages = [
+  'EN',
+  'RU',
+];
 
-export default KeyboardLanguages;
+function getNextLanguage(lang) {
+  const index = KeyboardLanguages.indexOf(lang);
+  const nextIndex = (index + 1) % KeyboardLanguages.length;
+  return KeyboardLanguages[nextIndex];
+}
+
+export {
+  KeyboardLanguages,
+  getNextLanguage,
+};
