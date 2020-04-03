@@ -37,13 +37,15 @@ const getDescriptionsItems = () => {
 
 class App {
   constructor() {
-    this.state = new State(state);
-    // this.isMousedown = false;
-    // this.currentKey = null;
-    // this.isCtrl = false;
-    // this.isAlt = false;
+    this.state = new State({ ...state });
 
-    this.setState = this.setState.bind(this);
+    // this.setAppState = this.setAppState.bind(this);
+
+    this.descriptions = Renderer.createElement('div', {
+      id: 'descriptions',
+      class: 'descriptions__container',
+      children: getDescriptionsItems(),
+    });
 
     this.textarea = Renderer.createElement('textarea', {
       id: 'textarea',
@@ -58,55 +60,34 @@ class App {
       state: this.state.getState(),
       onChange: this.onKeyboardChange,
     }).render();
+
     this.onKeyboardChange = this.onKeyboardChange.bind(this);
 
     // this.updateKeyboardKeyClass = this.updateKeyboardKeyClass.bind(this);
-    // this.state.subscribe(this.updateStateKeyboard);
     // this.state.subscribe(this.updateKeyboardKeyClass);
   }
 
-  setState(nextState) {
-    this.state.update(nextState);
-    this.state.notify();
-  }
+  // setAppState(nextState) {
+  //   console.log(nextState);
+  //   this.state.update(nextState);
+  //   this.state.notify();
+  // }
 
   onKeyboardChange(nextState) {
-    this.setState(nextState);
+    // this.setAppState(nextState);
+    this.state.update(nextState);
+    // console.log(this.state.getState());
   }
 
-  // updateStateKeyboard() {
-  //   this.keyboard.updateState({
-  //     state: this.state.getState(),
-  //   });
-  // }
-
-  // updateKeyboardKeyClass() {
-  //   this.keyboard.updateKeyClass({
-  //     isMousedown: this.isMousedown,
-  //     currentKey: this.currentKey,
-  //   });
-  // }
-
   render() {
-    this.descriptions = Renderer.createElement('div', {
-      id: 'descriptions',
-      class: 'descriptions__container',
-      children: getDescriptionsItems(),
-    });
-
-    this.keyboard.addEventListener('click', () => {
-      this.textarea.focus();
-    });
-
-    // this.keyboardRendered.addEventListener('transitionend', (evt) => {
-    //   console.log(evt.target);
+    // this.keyboard.addEventListener('click', () => {
+    //   this.textarea.focus();
     // });
 
-    this.textarea.addEventListener('keydown', (evt) => {
-      // console.log(evt.code);
-      evt.preventDefault();
-      this.textarea.focus();
-    });
+    // this.textarea.addEventListener('keydown', (evt) => {
+    //   evt.preventDefault();
+    //   this.textarea.focus();
+    // });
 
     // window.addEventListener('beforeunload', () => {
     //   const stateInJSON = JSON.stringify(this.state.getState());
