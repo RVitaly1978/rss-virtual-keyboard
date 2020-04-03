@@ -4,8 +4,8 @@ import State from './components/State';
 import Keyboard from './components/Keyboard';
 
 import KeyboardDescriptions from './constants/KeyboardDescriptions';
-import KeyboardLayout from './constants/KeyboardLayout';
-import { KeyboardLanguages, getNextLanguage } from './constants/KeyboardLanguages';
+// import KeyboardLayout from './constants/KeyboardLayout';
+import { KeyboardLanguages } from './constants/KeyboardLanguages';
 
 const initState = {
   lang: KeyboardLanguages[0],
@@ -38,10 +38,10 @@ const getDescriptionsItems = () => {
 class App {
   constructor() {
     this.state = new State(state);
-    this.isMousedown = false;
-    this.currentKey = null;
-    this.isCtrl = false;
-    this.isAlt = false;
+    // this.isMousedown = false;
+    // this.currentKey = null;
+    // this.isCtrl = false;
+    // this.isAlt = false;
 
     this.setState = this.setState.bind(this);
 
@@ -56,10 +56,12 @@ class App {
 
     this.keyboard = new Keyboard({
       state: this.state.getState(),
-    });
-    this.updateStateKeyboard = this.updateStateKeyboard.bind(this);
-    this.updateKeyboardKeyClass = this.updateKeyboardKeyClass.bind(this);
-    this.state.subscribe(this.updateStateKeyboard);
+      onChange: this.onKeyboardChange,
+    }).render();
+    this.onKeyboardChange = this.onKeyboardChange.bind(this);
+
+    // this.updateKeyboardKeyClass = this.updateKeyboardKeyClass.bind(this);
+    // this.state.subscribe(this.updateStateKeyboard);
     // this.state.subscribe(this.updateKeyboardKeyClass);
   }
 
@@ -68,18 +70,22 @@ class App {
     this.state.notify();
   }
 
-  updateStateKeyboard() {
-    this.keyboard.updateState({
-      state: this.state.getState(),
-    });
+  onKeyboardChange(nextState) {
+    this.setState(nextState);
   }
 
-  updateKeyboardKeyClass() {
-    this.keyboard.updateKeyClass({
-      isMousedown: this.isMousedown,
-      currentKey: this.currentKey,
-    });
-  }
+  // updateStateKeyboard() {
+  //   this.keyboard.updateState({
+  //     state: this.state.getState(),
+  //   });
+  // }
+
+  // updateKeyboardKeyClass() {
+  //   this.keyboard.updateKeyClass({
+  //     isMousedown: this.isMousedown,
+  //     currentKey: this.currentKey,
+  //   });
+  // }
 
   render() {
     this.descriptions = Renderer.createElement('div', {
@@ -88,43 +94,7 @@ class App {
       children: getDescriptionsItems(),
     });
 
-    this.keyboardRendered = this.keyboard.render();
-    this.keyboardRendered.addEventListener('mousedown', (evt) => {
-      if (evt.target.tagName !== 'BUTTON') return;
-
-      const { id } = evt.target;
-      this.currentKey = id;
-      this.isMousedown = true;
-      this.updateKeyboardKeyClass();
-
-      if ((id === KeyboardLayout.EN.ShiftLeft.type)
-        || (id === KeyboardLayout.EN.ShiftRight.type)) {
-        const prevIsShift = this.state.getState().isShift;
-        this.setState({ isShift: !prevIsShift });
-      }
-
-      if (id === KeyboardLayout.EN.CapsLock.type) {
-        const prevIsCapsLock = this.state.getState().isCapsLock;
-        this.setState({ isCapsLock: !prevIsCapsLock });
-      }
-
-      if (id === KeyboardLayout.EN.MetaLeft.type) { //-------------------------------------------
-        const nextLang = getNextLanguage(this.state.getState().lang);
-        this.setState({ lang: nextLang });
-      }
-
-      this.textarea.focus();
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (this.isMousedown) {
-        this.currentKey = null;
-        this.isMousedown = false;
-        this.updateKeyboardKeyClass();
-      }
-    });
-
-    this.keyboardRendered.addEventListener('click', () => {
+    this.keyboard.addEventListener('click', () => {
       this.textarea.focus();
     });
 
@@ -147,7 +117,7 @@ class App {
       class: 'main',
       children: [
         this.textarea,
-        this.keyboardRendered,
+        this.keyboard,
         this.descriptions,
       ],
     });

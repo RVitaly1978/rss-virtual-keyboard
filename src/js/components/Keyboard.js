@@ -1,8 +1,10 @@
 
 import Renderer from '../dom/Renderer';
+import State from './State';
 import Button from './Button';
 
 import KeyboardLayout from '../constants/KeyboardLayout';
+import { getNextLanguage } from '../constants/KeyboardLanguages';
 
 import getKeyCase from '../utils/getKeyCase';
 
@@ -51,11 +53,13 @@ function getKeyContent({ state, button }) {
 }
 
 class Keyboard {
-  // constructor({ state, onChange }) {
-  constructor({ state }) {
-    this.state = { ...state };
+  constructor({ state, onChange }) {
+    this.state = new State({ ...state });
+    this.setState = this.setState.bind(this);
 
-    // this.onChange = onChange;
+    this.onChange = onChange;
+    this.onStateChange = this.onStateChange.bind(this);
+    this.state.subscribe(this.onStateChange);
 
     // this.update = this.update.bind(this);
 
@@ -71,8 +75,23 @@ class Keyboard {
     // });
 
     this.keyboardKeys = getKeyboardKeys({
-      state: this.state,
+      state: this.state.getState(),
     });
+
+    this.keyboard = Renderer.createElement('div', {
+      id: 'keyboard',
+      class: 'keyboard',
+      children: [...this.keyboardKeys],
+    });
+  }
+
+  setState(nextState) {
+    this.state.update(nextState);
+    this.state.notify();
+  }
+
+  onStateChange() {
+    this.onChange(this.state.getState());
   }
 
   // handleInputChange({ id, value }) {
@@ -102,7 +121,7 @@ class Keyboard {
       isCapsLock: prevIsCapsLock,
       isShift: prevIsShift,
       currentKey: prevCurrentKey,
-    } = this.state;
+    } = this.state.getState();
     this.state = { ...this.state, ...state };
     const keyId = this.state.currentKey || prevCurrentKey;
 
@@ -161,10 +180,39 @@ class Keyboard {
   }
 
   render() {
-    this.keyboard = Renderer.createElement('div', {
-      id: 'keyboard',
-      class: 'keyboard',
-      children: [...this.keyboardKeys],
+    this.keyboard.addEventListener('mousedown', (evt) => {
+      if (evt.target.tagName !== 'BUTTON') return;
+
+      const { id } = evt.target;
+      this.currentKey = id;
+      this.isMousedown = true;
+      this.updateKeyClass();
+
+      if ((id === KeyboardLayout.EN.ShiftLeft.type)
+        || (id === KeyboardLayout.EN.ShiftRight.type)) {
+        const prevIsShift = this.state.getState().isShift;
+        this.setState({ isShift: !prevIsShift });
+      }
+
+      if (id === KeyboardLayout.EN.CapsLock.type) {
+        const prevIsCapsLock = this.state.getState().isCapsLock;
+        this.setState({ isCapsLock: !prevIsCapsLock });
+      }
+
+      if (id === KeyboardLayout.EN.MetaLeft.type) { //-------------------------------------------
+        const nextLang = getNextLanguage(this.state.getState().lang);
+        this.setState({ lang: nextLang });
+      }
+
+      // this.textarea.focus();
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (this.isMousedown) {
+        this.currentKey = null;
+        this.isMousedown = false;
+        this.updateKeyClass();
+      }
     });
 
     return this.keyboard;
