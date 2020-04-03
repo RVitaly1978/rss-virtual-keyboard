@@ -97,18 +97,58 @@ class Keyboard {
   //   this.onChange(this.state);
   // }
 
+  updateKeyClass(state) {
+    const {
+      isCapsLock: prevIsCapsLock,
+      isShift: prevIsShift,
+      currentKey: prevCurrentKey,
+    } = this.state;
+    this.state = { ...this.state, ...state };
+    const keyId = this.state.currentKey || prevCurrentKey;
+
+    const toggleKeyClass = (button, isButtonPress) => {
+      button.classList.toggle('key--active', isButtonPress);
+    };
+
+    const getButton = (id) => {
+      let keyIndex;
+      this.keyboardKeys.forEach((button, index) => {
+        if (button.id === id) {
+          keyIndex = index;
+        }
+      });
+      return this.keyboardKeys[keyIndex];
+    };
+
+    const button = getButton(keyId);
+    const { type: CapsLock } = KeyboardLayout.EN.CapsLock;
+    const { type: ShiftLeft } = KeyboardLayout.EN.ShiftLeft;
+    const { type: ShiftRight } = KeyboardLayout.EN.ShiftRight;
+
+    if ((keyId === CapsLock) && (prevIsCapsLock)) {
+      toggleKeyClass(button, prevIsCapsLock);
+    } else if (((keyId === ShiftLeft) || (keyId === ShiftRight))
+      && (prevIsShift)) {
+      const shiftLeftButton = getButton(ShiftLeft);
+      const shiftRightButton = getButton(ShiftRight);
+      toggleKeyClass(shiftLeftButton, false);
+      toggleKeyClass(shiftRightButton, false);
+    } else {
+      toggleKeyClass(button, this.state.isMousedown);
+    }
+  }
+
   updateState({ state }) {
     const {
-      isShift: oldIsShift,
-      isCapsLock: oldIsCapsLock,
-      lang: oldLang,
+      isShift: prevIsShift,
+      isCapsLock: prevIsCapsLock,
+      lang: prevLang,
     } = this.state;
+    this.state = { ...this.state, ...state };
 
-    this.state = { ...state };
-
-    if ((this.state.isShift !== oldIsShift)
-      || (this.state.isCapsLock !== oldIsCapsLock)
-      || (this.state.lang !== oldLang)) {
+    if ((this.state.isShift !== prevIsShift)
+      || (this.state.isCapsLock !== prevIsCapsLock)
+      || (this.state.lang !== prevLang)) {
       this.keyboardKeys.forEach((button) => {
         const key = button;
         const keyContent = getKeyContent({

@@ -8,11 +8,9 @@ import KeyboardLayout from './constants/KeyboardLayout';
 import { KeyboardLanguages, getNextLanguage } from './constants/KeyboardLanguages';
 
 const initState = {
-  isShift: false,
-  isCtrl: false,
-  isAlt: false,
-  isCapsLock: false,
   lang: KeyboardLanguages[0],
+  isCapsLock: false,
+  isShift: false,
 };
 
 const state = JSON.parse(localStorage.getItem('keyboardState')) || initState;
@@ -40,6 +38,10 @@ const getDescriptionsItems = () => {
 class App {
   constructor() {
     this.state = new State(state);
+    this.isMousedown = false;
+    this.currentKey = null;
+    this.isCtrl = false;
+    this.isAlt = false;
 
     this.setState = this.setState.bind(this);
 
@@ -56,7 +58,9 @@ class App {
       state: this.state.getState(),
     });
     this.updateStateKeyboard = this.updateStateKeyboard.bind(this);
+    this.updateKeyboardKeyClass = this.updateKeyboardKeyClass.bind(this);
     this.state.subscribe(this.updateStateKeyboard);
+    // this.state.subscribe(this.updateKeyboardKeyClass);
   }
 
   setState(nextState) {
@@ -70,6 +74,13 @@ class App {
     });
   }
 
+  updateKeyboardKeyClass() {
+    this.keyboard.updateKeyClass({
+      isMousedown: this.isMousedown,
+      currentKey: this.currentKey,
+    });
+  }
+
   render() {
     this.descriptions = Renderer.createElement('div', {
       id: 'descriptions',
@@ -79,17 +90,22 @@ class App {
 
     this.keyboardRendered = this.keyboard.render();
     this.keyboardRendered.addEventListener('mousedown', (evt) => {
+      if (evt.target.tagName !== 'BUTTON') return;
+
       const { id } = evt.target;
+      this.currentKey = id;
+      this.isMousedown = true;
+      this.updateKeyboardKeyClass();
 
       if ((id === KeyboardLayout.EN.ShiftLeft.type)
         || (id === KeyboardLayout.EN.ShiftRight.type)) {
-        const oldIsShift = this.state.getState().isShift;
-        this.setState({ isShift: !oldIsShift });
+        const prevIsShift = this.state.getState().isShift;
+        this.setState({ isShift: !prevIsShift });
       }
 
       if (id === KeyboardLayout.EN.CapsLock.type) {
-        const oldIsCapsLock = this.state.getState().isCapsLock;
-        this.setState({ isCapsLock: !oldIsCapsLock });
+        const prevIsCapsLock = this.state.getState().isCapsLock;
+        this.setState({ isCapsLock: !prevIsCapsLock });
       }
 
       if (id === KeyboardLayout.EN.MetaLeft.type) { //-------------------------------------------
@@ -97,14 +113,24 @@ class App {
         this.setState({ lang: nextLang });
       }
 
-      // console.log(evt.target.textContent);
-
       this.textarea.focus();
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (this.isMousedown) {
+        this.currentKey = null;
+        this.isMousedown = false;
+        this.updateKeyboardKeyClass();
+      }
     });
 
     this.keyboardRendered.addEventListener('click', () => {
       this.textarea.focus();
     });
+
+    // this.keyboardRendered.addEventListener('transitionend', (evt) => {
+    //   console.log(evt.target);
+    // });
 
     this.textarea.addEventListener('keydown', (evt) => {
       // console.log(evt.code);
@@ -112,10 +138,10 @@ class App {
       this.textarea.focus();
     });
 
-    window.addEventListener('beforeunload', () => {
-      const stateInJSON = JSON.stringify(this.state.getState());
-      localStorage.setItem('keyboardState', stateInJSON);
-    });
+    // window.addEventListener('beforeunload', () => {
+    //   const stateInJSON = JSON.stringify(this.state.getState());
+    //   localStorage.setItem('keyboardState', stateInJSON);
+    // });
 
     return Renderer.createElement('div', {
       class: 'main',
