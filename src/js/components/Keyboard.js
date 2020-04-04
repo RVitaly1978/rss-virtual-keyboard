@@ -131,7 +131,7 @@ class Keyboard {
     this.currentKey = id;
     this.isMousedown = true;
 
-    this.onKeyPress({ key: textContent });
+    this.onKeyPress({ id, key: textContent });
     this.updateKeyOnMousedown();
 
     if (id === SHIFT_LEFT) {

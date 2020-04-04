@@ -42,8 +42,8 @@ class App {
     this.setState(nextState);
   }
 
-  onKeyboardKeyPress({ key }) {
-    this.textInput.printKey({ key });
+  onKeyboardKeyPress({ id, key }) {
+    this.textInput.printKey({ id, key });
   }
 
   render() {
@@ -53,11 +53,12 @@ class App {
     this.keyboardRendered.addEventListener('mousedown', (evt) => {
       if (evt.target.tagName !== 'BUTTON') return;
       this.keyboard.onMousedownEvent(evt);
-      // this.textarea.focus();
+      this.textInputRendered.focus();
     });
 
     document.addEventListener('mouseup', () => {
       this.keyboard.onMouseupEvent();
+      this.textInputRendered.focus();
     });
 
     document.addEventListener('keydown', (evt) => {

@@ -16,17 +16,79 @@ function insertChar({ textarea, char }) {
 
   input.selectionStart = selectionStart + 1;
   input.selectionEnd = input.selectionStart;
-  input.focus();
 }
 
 function handlePressTab({ textarea }) {
   const char = CharKeys[KeyboardLayout.EN.Tab.type];
   insertChar({ textarea, char });
-  // Tab.classList.add('key--active');
-  // removeActive(Tab);
+}
+
+function handlePressEnter({ textarea }) {
+  const char = CharKeys[KeyboardLayout.EN.Enter.type];
+  insertChar({ textarea, char });
+}
+
+function handlePressBackspace({ textarea }) {
+  const input = textarea;
+  const { value, selectionStart, selectionEnd } = input;
+
+  if (selectionStart !== selectionEnd) {
+    input.value = value.slice(0, selectionStart) + value.slice(selectionEnd);
+    input.selectionStart = selectionStart;
+  } else {
+    input.value = value.slice(0, selectionStart - 1) + value.slice(selectionStart);
+    input.selectionStart = selectionStart - 1;
+  }
+
+  input.selectionEnd = selectionStart;
+}
+
+function handlePressDelete({ textarea }) {
+  const input = textarea;
+  const { value, selectionStart, selectionEnd } = input;
+
+  if (selectionStart !== selectionEnd) {
+    input.value = value.slice(0, selectionStart) + value.slice(selectionEnd);
+  } else {
+    input.value = value.slice(0, selectionStart) + value.slice(selectionStart + 1);
+  }
+
+  input.selectionStart = selectionStart;
+  input.selectionEnd = selectionStart;
+}
+
+function handlePressArrowLeft({ textarea }) {
+  const input = textarea;
+  const { selectionStart, selectionEnd } = input;
+
+  if (selectionStart !== selectionEnd) {
+    input.selectionStart = selectionStart;
+  } else {
+    input.selectionStart = selectionStart - 1;
+  }
+
+  input.selectionEnd = selectionStart;
+}
+
+function handlePressArrowRight({ textarea }) {
+  const input = textarea;
+  const { selectionStart, selectionEnd } = input;
+
+  if (selectionStart !== selectionEnd) {
+    input.selectionStart = selectionEnd;
+  } else {
+    input.selectionStart = selectionStart + 1;
+  }
+
+  input.selectionEnd = selectionStart;
 }
 
 export {
   insertChar,
   handlePressTab,
+  handlePressEnter,
+  handlePressBackspace,
+  handlePressDelete,
+  handlePressArrowLeft,
+  handlePressArrowRight,
 };
