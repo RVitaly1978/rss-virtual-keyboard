@@ -62,15 +62,23 @@ class App {
     });
 
     document.addEventListener('keydown', (evt) => {
-      evt.preventDefault();
+      if ((evt.code !== 'ArrowUp') && (evt.code !== 'ArrowDown')) {
+        evt.preventDefault();
+      }
       this.keyboard.onKeydownEvent(evt);
-      // this.textInputRendered.focus();
+      this.textInputRendered.focus();
     });
 
-    // window.addEventListener('beforeunload', () => {
-    //   const stateInJSON = JSON.stringify(this.state.getState());
-    //   localStorage.setItem('keyboardState', stateInJSON);
-    // });
+    document.addEventListener('keyup', (evt) => {
+      evt.preventDefault();
+      this.keyboard.onKeyupEvent(evt);
+      this.textInputRendered.focus();
+    });
+
+    window.addEventListener('beforeunload', () => {
+      const stateInJSON = JSON.stringify(this.state.getState());
+      localStorage.setItem('keyboardState', stateInJSON);
+    });
 
     this.app = Renderer.createElement('div', {
       class: 'main',

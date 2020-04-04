@@ -41,7 +41,9 @@ class Keyboard {
     this.onMousedownEvent = this.onMousedownEvent.bind(this);
     this.onMouseupEvent = this.onMouseupEvent.bind(this);
     this.onKeydownEvent = this.onKeydownEvent.bind(this);
-    this.updateKeyOnMouseUp = this.updateKeyOnMouseUp.bind(this);
+    this.onKeyupEvent = this.onKeyupEvent.bind(this);
+    this.updateKeyOnKeyup = this.updateKeyOnKeyup.bind(this);
+    this.updateKeyOnMouseup = this.updateKeyOnMouseup.bind(this);
     this.updateKeyOnMousedown = this.updateKeyOnMousedown.bind(this);
 
     this.updateKeys = this.updateKeys.bind(this);
@@ -99,7 +101,7 @@ class Keyboard {
     }
   }
 
-  updateKeyOnMouseUp() {
+  updateKeyOnMouseup() {
     const keyId = this.currentKey;
 
     if ((keyId === CAPSLOCK)
@@ -111,6 +113,20 @@ class Keyboard {
     }
 
     toggleKeyClass(this.keyboardKeys, keyId, this.isMousedown);
+  }
+
+  updateKeyOnKeyup(evt) {
+    const keyId = evt.code;
+
+    // if ((keyId === CAPSLOCK)
+    //   || (keyId === SHIFT_LEFT)
+    //   || (keyId === SHIFT_RIGHT)
+    //   || (keyId === CTRL_LEFT)
+    //   || (keyId === ALT_LEFT)) {
+    //   return;
+    // }
+
+    toggleKeyClass(this.keyboardKeys, keyId, false);
   }
 
   updateKeys() {
@@ -167,9 +183,8 @@ class Keyboard {
 
   onMouseupEvent() {
     if (this.isMousedown) {
-      // this.currentKey = null;
       this.isMousedown = false;
-      this.updateKeyOnMouseUp();
+      this.updateKeyOnMouseup();
     }
   }
 
@@ -177,10 +192,45 @@ class Keyboard {
     const { code: id } = evt;
     const { textContent } = getButton(this.keyboardKeys, id);
     this.currentKey = id;
-    this.isKeydown = true;
+    this.isMousedown = true;
+    // this.isKeydown = true;
 
-    this.onKeyPress({ key: textContent });
-    // this.updateKeyOnMousedown();
+    this.onKeyPress({ id, key: textContent });
+    this.updateKeyOnMousedown();
+
+    if (id === SHIFT_LEFT) {
+      this.isShiftLeft = true;
+      const prev = this.state.getState().isShift;
+      this.setState({ isShift: !prev });
+    }
+
+    if (id === SHIFT_RIGHT) {
+      this.isShiftRight = true;
+      const prev = this.state.getState().isShift;
+      this.setState({ isShift: !prev });
+    }
+
+    if (id === CAPSLOCK) {
+      const prev = this.state.getState().isCapsLock;
+      this.setState({ isCapsLock: !prev });
+    }
+
+    if (id === META_LEFT) { //-------------------------------------------
+      const nextLang = getNextLanguage(this.state.getState().lang);
+      this.setState({ lang: nextLang });
+    }
+
+    if (id === CTRL_LEFT) {
+      this.isCtrl = true;
+    }
+
+    if (id === CTRL_LEFT) {
+      this.isAlt = true;
+    }
+  }
+
+  onKeyupEvent(evt) {
+    this.updateKeyOnKeyup(evt);
   }
 
   render() {

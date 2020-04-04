@@ -15,7 +15,7 @@ function insertChar({ textarea, char }) {
   }
 
   input.selectionStart = selectionStart + 1;
-  input.selectionEnd = input.selectionStart;
+  input.selectionEnd = selectionStart + 1;
 }
 
 function handlePressTab({ textarea }) {
@@ -40,7 +40,7 @@ function handlePressBackspace({ textarea }) {
     input.selectionStart = selectionStart - 1;
   }
 
-  input.selectionEnd = selectionStart;
+  input.selectionEnd = selectionStart - 1;
 }
 
 function handlePressDelete({ textarea }) {
@@ -67,7 +67,7 @@ function handlePressArrowLeft({ textarea }) {
     input.selectionStart = selectionStart - 1;
   }
 
-  input.selectionEnd = selectionStart;
+  input.selectionEnd = selectionStart - 1;
 }
 
 function handlePressArrowRight({ textarea }) {
@@ -80,7 +80,7 @@ function handlePressArrowRight({ textarea }) {
     input.selectionStart = selectionStart + 1;
   }
 
-  input.selectionEnd = selectionStart;
+  input.selectionEnd = selectionStart + 1;
 }
 
 export {
