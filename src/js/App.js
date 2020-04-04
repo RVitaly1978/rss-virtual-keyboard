@@ -1,3 +1,4 @@
+
 import Renderer from './dom/Renderer';
 
 import State from './components/State';
@@ -5,15 +6,13 @@ import Keyboard from './components/Keyboard';
 import Input from './components/Input';
 
 import { getDescriptionsItems } from './constants/KeyboardDescriptions';
-import { InitState } from './constants/InitState';
+import KeyboardInitState from './constants/KeyboardInitState';
 
-const state = JSON.parse(localStorage.getItem('keyboardState')) || InitState;
+const state = JSON.parse(localStorage.getItem('keyboardState')) || KeyboardInitState;
 
 class App {
   constructor() {
     this.state = new State({ ...state });
-
-    // this.setAppState = this.setAppState.bind(this);
 
     this.descriptions = Renderer.createElement('div', {
       id: 'descriptions',
@@ -21,43 +20,43 @@ class App {
       children: getDescriptionsItems(),
     });
 
-    this.input = new Input().render();
+    this.textInput = new Input();
 
     this.keyboard = new Keyboard({
       state: this.state.getState(),
       onStateChange: this.onKeyboardStateChange,
       onKeyPress: this.onKeyboardKeyPress,
-    }).render();
+    });
 
     this.onKeyboardStateChange = this.onKeyboardStateChange.bind(this);
     this.onKeyboardKeyPress = this.onKeyboardKeyPress.bind(this);
 
-    // this.updateKeyboardKeyClass = this.updateKeyboardKeyClass.bind(this);
-    // this.state.subscribe(this.updateKeyboardKeyClass);
+    // this.setKeyToPrint = this.setKeyToPrint.bind(this);
   }
-
-  // setAppState(nextState) {
-  //   console.log(nextState);
-  //   this.state.update(nextState);
-  //   this.state.notify();
-  // }
 
   onKeyboardStateChange(nextState) {
     this.state.update(nextState);
   }
 
   onKeyboardKeyPress({ key }) {
-    console.log(key, this.state.getState());
+    console.log(key, this.textInput);
+    this.textInput.printKey({ key });
+    // this.setKeyToPrint({ key });
   }
+
+  // setKeyToPrint({ key }) {
+  //   console.log(key, this.textInput);
+  //   this.textInput.printKey();
+  // }
 
   render() {
     // this.keyboard.addEventListener('click', () => {
-    //   this.input.focus();
+    //   this.textInput.focus();
     // });
 
-    // this.input.addEventListener('keydown', (evt) => {
+    // this.textInput.addEventListener('keydown', (evt) => {
     //   evt.preventDefault();
-    //   this.input.focus();
+    //   this.textInput.focus();
     // });
 
     // window.addEventListener('beforeunload', () => {
@@ -65,14 +64,16 @@ class App {
     //   localStorage.setItem('keyboardState', stateInJSON);
     // });
 
-    return Renderer.createElement('div', {
+    this.app = Renderer.createElement('div', {
       class: 'main',
       children: [
-        this.input,
-        this.keyboard,
+        this.textInput.render(),
+        this.keyboard.render(),
         this.descriptions,
       ],
     });
+
+    return this.app;
   }
 }
 

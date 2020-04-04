@@ -1,10 +1,10 @@
 
 import { KeyboardLanguages } from './KeyboardLanguages';
 
-const InitState = {
+const KeyboardInitState = {
   lang: KeyboardLanguages[0],
   isCapsLock: false,
   isShift: false,
 };
 
-export default InitState;
+export default KeyboardInitState;

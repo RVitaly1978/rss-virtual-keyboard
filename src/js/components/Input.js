@@ -1,18 +1,20 @@
 
 import Renderer from '../dom/Renderer';
-// import State from './State';
-// import Button from './Button';
-
-// import KeyboardLayout from '../constants/KeyboardLayout';
-// import { getNextLanguage } from '../constants/KeyboardLanguages';
-
-// import getKeyCase from '../utils/getKeyCase';
 
 class Input {
   constructor() {
   // constructor({ state, onStateChange, onKeyPress }) {
   //   this.state = new State({ ...state });
-  //   this.setState = this.setState.bind(this);
+
+    this.input = Renderer.createElement('textarea', {
+      id: 'textarea',
+      class: 'keyboard__input',
+      cols: 60,
+      rows: 5,
+      autofocus: true,
+    });
+
+    this.printKey = this.printKey.bind(this);
 
     // this.onStateChange = onStateChange;
     // this.onKeyPress = onKeyPress;
@@ -32,14 +34,6 @@ class Input {
 
     // this.updateKeys = this.updateKeys.bind(this);
     // this.state.subscribe(this.updateKeys);
-
-    this.input = Renderer.createElement('textarea', {
-      id: 'textarea',
-      class: 'keyboard__input',
-      cols: 60,
-      rows: 5,
-      autofocus: true,
-    });
 
     // ----------------------------------------------------------------------------------
     // this.keyboard.addEventListener('mousedown', (evt) => {
@@ -93,10 +87,9 @@ class Input {
     // });
   }
 
-  // setState(nextState) {
-  //   this.state.update(nextState);
-  //   this.state.notify();
-  // }
+  printKey() {
+    console.log(this.input);
+  }
 
   render() {
     return this.input;

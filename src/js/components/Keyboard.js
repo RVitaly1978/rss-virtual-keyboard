@@ -6,7 +6,13 @@ import Button from './Button';
 import KeyboardLayout from '../constants/KeyboardLayout';
 import { getNextLanguage } from '../constants/KeyboardLanguages';
 
-import getKeyCase from '../utils/getKeyCase';
+import {
+  getKeyCase,
+  getKeyboardKeys,
+  getKeyContent,
+  getButton,
+  toggleKeyClass,
+} from '../utils/keyboardUtils';
 
 function getKeyboardKeys({ state }) {
   const items = [];
@@ -82,7 +88,6 @@ class Keyboard {
 
     this.onStateChange = onStateChange;
     this.onKeyPress = onKeyPress;
-    this.updateAppOnKeyPress = this.updateAppOnKeyPress.bind(this);
     this.updateAppOnStateChange = this.updateAppOnStateChange.bind(this);
     this.state.subscribe(this.updateAppOnStateChange);
 
@@ -108,58 +113,6 @@ class Keyboard {
       class: 'keyboard',
       children: [...this.keyboardKeys],
     });
-
-    // ----------------------------------------------------------------------------------
-    this.keyboard.addEventListener('mousedown', (evt) => {
-      if (evt.target.tagName !== 'BUTTON') return;
-
-      const { id } = evt.target;
-      const { textContent } = evt.target;
-      this.currentKey = id;
-      this.isMousedown = true;
-      this.updateAppOnKeyPress({ key: textContent });
-      this.updateKeyOnMousedown();
-
-      if (id === SHIFT_LEFT) {
-        this.isShiftLeft = true;
-        const prev = this.state.getState().isShift;
-        this.setState({ isShift: !prev });
-      }
-
-      if (id === SHIFT_RIGHT) {
-        this.isShiftRight = true;
-        const prev = this.state.getState().isShift;
-        this.setState({ isShift: !prev });
-      }
-
-      if (id === CAPSLOCK) {
-        const prev = this.state.getState().isCapsLock;
-        this.setState({ isCapsLock: !prev });
-      }
-
-      if (id === META_LEFT) { //-------------------------------------------
-        const nextLang = getNextLanguage(this.state.getState().lang);
-        this.setState({ lang: nextLang });
-      }
-
-      if (id === CTRL_LEFT) {
-        this.isCtrl = true;
-      }
-
-      if (id === CTRL_LEFT) {
-        this.isAlt = true;
-      }
-
-      // this.textarea.focus();
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (this.isMousedown) {
-        // this.currentKey = null;
-        this.isMousedown = false;
-        this.updateKeyOnMouseUp();
-      }
-    });
   }
 
   setState(nextState) {
@@ -169,10 +122,6 @@ class Keyboard {
 
   updateAppOnStateChange() {
     this.onStateChange({ ...this.state.getState() });
-  }
-
-  updateAppOnKeyPress({ key }) {
-    this.onKeyPress({ key });
   }
 
   updateKeyOnMousedown() {
@@ -234,6 +183,57 @@ class Keyboard {
   }
 
   render() {
+    this.keyboard.addEventListener('mousedown', (evt) => {
+      if (evt.target.tagName !== 'BUTTON') return;
+
+      const { id } = evt.target;
+      const { textContent } = evt.target;
+      this.currentKey = id;
+      this.isMousedown = true;
+      this.onKeyPress({ key: textContent });
+      this.updateKeyOnMousedown();
+
+      if (id === SHIFT_LEFT) {
+        this.isShiftLeft = true;
+        const prev = this.state.getState().isShift;
+        this.setState({ isShift: !prev });
+      }
+
+      if (id === SHIFT_RIGHT) {
+        this.isShiftRight = true;
+        const prev = this.state.getState().isShift;
+        this.setState({ isShift: !prev });
+      }
+
+      if (id === CAPSLOCK) {
+        const prev = this.state.getState().isCapsLock;
+        this.setState({ isCapsLock: !prev });
+      }
+
+      if (id === META_LEFT) { //-------------------------------------------
+        const nextLang = getNextLanguage(this.state.getState().lang);
+        this.setState({ lang: nextLang });
+      }
+
+      if (id === CTRL_LEFT) {
+        this.isCtrl = true;
+      }
+
+      if (id === CTRL_LEFT) {
+        this.isAlt = true;
+      }
+
+      // this.textarea.focus();
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (this.isMousedown) {
+        // this.currentKey = null;
+        this.isMousedown = false;
+        this.updateKeyOnMouseUp();
+      }
+    });
+
     return this.keyboard;
   }
 }
