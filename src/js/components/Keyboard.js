@@ -76,13 +76,15 @@ const ALT_LEFT = KeyboardLayout.EN.AltLeft.type;
 const META_LEFT = KeyboardLayout.EN.MetaLeft.type;
 
 class Keyboard {
-  constructor({ state, onChange }) {
+  constructor({ state, onStateChange, onKeyPress }) {
     this.state = new State({ ...state });
     this.setState = this.setState.bind(this);
 
-    this.onChange = onChange;
-    this.updateAppState = this.updateAppState.bind(this);
-    this.state.subscribe(this.updateAppState);
+    this.onStateChange = onStateChange;
+    this.onKeyPress = onKeyPress;
+    this.updateAppOnKeyPress = this.updateAppOnKeyPress.bind(this);
+    this.updateAppOnStateChange = this.updateAppOnStateChange.bind(this);
+    this.state.subscribe(this.updateAppOnStateChange);
 
     this.isMousedown = false;
     this.currentKey = null;
@@ -112,8 +114,10 @@ class Keyboard {
       if (evt.target.tagName !== 'BUTTON') return;
 
       const { id } = evt.target;
+      const { textContent } = evt.target;
       this.currentKey = id;
       this.isMousedown = true;
+      this.updateAppOnKeyPress({ key: textContent });
       this.updateKeyOnMousedown();
 
       if (id === SHIFT_LEFT) {
@@ -163,8 +167,12 @@ class Keyboard {
     this.state.notify();
   }
 
-  updateAppState() {
-    this.onChange({ ...this.state.getState() });
+  updateAppOnStateChange() {
+    this.onStateChange({ ...this.state.getState() });
+  }
+
+  updateAppOnKeyPress({ key }) {
+    this.onKeyPress({ key });
   }
 
   updateKeyOnMousedown() {
@@ -188,11 +196,11 @@ class Keyboard {
     } else if ((keyId === CTRL_LEFT) || (keyId === ALT_LEFT)) {
       if (!this.isCtrl && !this.isAlt) {
         toggleKeyClass(this.keyboardKeys, keyId, true);
-      } else {
-        toggleKeyClass(this.keyboardKeys, CTRL_LEFT, !this.isCtrl);
-        toggleKeyClass(this.keyboardKeys, ALT_LEFT, !this.isAlt);
+      } else { // -----------------------------------------------------------------
         this.isCtrl = false;
         this.isAlt = false;
+        toggleKeyClass(this.keyboardKeys, CTRL_LEFT, this.isCtrl);
+        toggleKeyClass(this.keyboardKeys, ALT_LEFT, this.isAlt);
       }
     } else {
       toggleKeyClass(this.keyboardKeys, keyId, this.isMousedown);

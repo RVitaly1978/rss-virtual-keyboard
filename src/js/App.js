@@ -2,38 +2,12 @@ import Renderer from './dom/Renderer';
 
 import State from './components/State';
 import Keyboard from './components/Keyboard';
+import Input from './components/Input';
 
-import KeyboardDescriptions from './constants/KeyboardDescriptions';
-// import KeyboardLayout from './constants/KeyboardLayout';
-import { KeyboardLanguages } from './constants/KeyboardLanguages';
+import { getDescriptionsItems } from './constants/KeyboardDescriptions';
+import { InitState } from './constants/InitState';
 
-const initState = {
-  lang: KeyboardLanguages[0],
-  isCapsLock: false,
-  isShift: false,
-};
-
-const state = JSON.parse(localStorage.getItem('keyboardState')) || initState;
-
-const getDescriptionsItems = () => {
-  const items = [];
-
-  Object.keys(KeyboardDescriptions).forEach((key) => {
-    const option = Renderer.createElement('p', {
-      class: 'descriptions__option',
-      children: [key],
-    });
-
-    const value = Renderer.createElement('p', {
-      class: 'descriptions__value',
-      children: [KeyboardDescriptions[key]],
-    });
-
-    items.push(value, option);
-  });
-
-  return items;
-};
+const state = JSON.parse(localStorage.getItem('keyboardState')) || InitState;
 
 class App {
   constructor() {
@@ -47,21 +21,16 @@ class App {
       children: getDescriptionsItems(),
     });
 
-    this.textarea = Renderer.createElement('textarea', {
-      id: 'textarea',
-      class: 'keyboard__input',
-      name: 'textarea',
-      cols: 60,
-      rows: 5,
-      autofocus: true,
-    });
+    this.input = new Input().render();
 
     this.keyboard = new Keyboard({
       state: this.state.getState(),
-      onChange: this.onKeyboardChange,
+      onStateChange: this.onKeyboardStateChange,
+      onKeyPress: this.onKeyboardKeyPress,
     }).render();
 
-    this.onKeyboardChange = this.onKeyboardChange.bind(this);
+    this.onKeyboardStateChange = this.onKeyboardStateChange.bind(this);
+    this.onKeyboardKeyPress = this.onKeyboardKeyPress.bind(this);
 
     // this.updateKeyboardKeyClass = this.updateKeyboardKeyClass.bind(this);
     // this.state.subscribe(this.updateKeyboardKeyClass);
@@ -73,20 +42,22 @@ class App {
   //   this.state.notify();
   // }
 
-  onKeyboardChange(nextState) {
-    // this.setAppState(nextState);
+  onKeyboardStateChange(nextState) {
     this.state.update(nextState);
-    // console.log(this.state.getState());
+  }
+
+  onKeyboardKeyPress({ key }) {
+    console.log(key, this.state.getState());
   }
 
   render() {
     // this.keyboard.addEventListener('click', () => {
-    //   this.textarea.focus();
+    //   this.input.focus();
     // });
 
-    // this.textarea.addEventListener('keydown', (evt) => {
+    // this.input.addEventListener('keydown', (evt) => {
     //   evt.preventDefault();
-    //   this.textarea.focus();
+    //   this.input.focus();
     // });
 
     // window.addEventListener('beforeunload', () => {
@@ -97,7 +68,7 @@ class App {
     return Renderer.createElement('div', {
       class: 'main',
       children: [
-        this.textarea,
+        this.input,
         this.keyboard,
         this.descriptions,
       ],
