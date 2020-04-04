@@ -14,6 +14,10 @@ class App {
   constructor() {
     this.state = new State({ ...state });
 
+    this.setState = this.setState.bind(this);
+    this.onKeyboardStateChange = this.onKeyboardStateChange.bind(this);
+    this.onKeyboardKeyPress = this.onKeyboardKeyPress.bind(this);
+
     this.descriptions = Renderer.createElement('div', {
       id: 'descriptions',
       class: 'descriptions__container',
@@ -27,37 +31,40 @@ class App {
       onStateChange: this.onKeyboardStateChange,
       onKeyPress: this.onKeyboardKeyPress,
     });
+  }
 
-    this.onKeyboardStateChange = this.onKeyboardStateChange.bind(this);
-    this.onKeyboardKeyPress = this.onKeyboardKeyPress.bind(this);
-
-    // this.setKeyToPrint = this.setKeyToPrint.bind(this);
+  setState(nextState) {
+    this.state.update(nextState);
+    // this.state.notify();
   }
 
   onKeyboardStateChange(nextState) {
-    this.state.update(nextState);
+    this.setState(nextState);
   }
 
   onKeyboardKeyPress({ key }) {
-    console.log(key, this.textInput);
     this.textInput.printKey({ key });
-    // this.setKeyToPrint({ key });
   }
 
-  // setKeyToPrint({ key }) {
-  //   console.log(key, this.textInput);
-  //   this.textInput.printKey();
-  // }
-
   render() {
-    // this.keyboard.addEventListener('click', () => {
-    //   this.textInput.focus();
-    // });
+    this.keyboardRendered = this.keyboard.render();
+    this.textInputRendered = this.textInput.render();
 
-    // this.textInput.addEventListener('keydown', (evt) => {
-    //   evt.preventDefault();
-    //   this.textInput.focus();
-    // });
+    this.keyboardRendered.addEventListener('mousedown', (evt) => {
+      if (evt.target.tagName !== 'BUTTON') return;
+      this.keyboard.onMousedownEvent(evt);
+      // this.textarea.focus();
+    });
+
+    document.addEventListener('mouseup', () => {
+      this.keyboard.onMouseupEvent();
+    });
+
+    document.addEventListener('keydown', (evt) => {
+      evt.preventDefault();
+      this.keyboard.onKeydownEvent(evt);
+      // this.textInputRendered.focus();
+    });
 
     // window.addEventListener('beforeunload', () => {
     //   const stateInJSON = JSON.stringify(this.state.getState());
@@ -67,8 +74,8 @@ class App {
     this.app = Renderer.createElement('div', {
       class: 'main',
       children: [
-        this.textInput.render(),
-        this.keyboard.render(),
+        this.textInputRendered,
+        this.keyboardRendered,
         this.descriptions,
       ],
     });

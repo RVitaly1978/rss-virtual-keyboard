@@ -1,5 +1,5 @@
 
-import KeyboardLayout from '../constants/KeyboardLayout';
+import { KeyboardLayout } from '../constants/KeyboardLayout';
 import Button from '../components/Button';
 
 const KeyCases = {

@@ -391,4 +391,12 @@ const KeyboardLayout = {
   },
 };
 
-export default KeyboardLayout;
+const CharKeys = {
+  [KeyboardLayout.EN.Tab.type]: '\t',
+  [KeyboardLayout.EN.Enter.type]: '\n',
+};
+
+export {
+  KeyboardLayout,
+  CharKeys,
+};

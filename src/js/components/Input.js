@@ -1,18 +1,16 @@
 
 import Renderer from '../dom/Renderer';
 
+import {
+  insertChar,
+  // handlePressTab,
+} from '../utils/inputUtils';
+
 class Input {
   constructor() {
-  // constructor({ state, onStateChange, onKeyPress }) {
-  //   this.state = new State({ ...state });
-
-    this.input = Renderer.createElement('textarea', {
-      id: 'textarea',
-      class: 'keyboard__input',
-      cols: 60,
-      rows: 5,
-      autofocus: true,
-    });
+    /* eslint-disable no-debugger */
+    // debugger;
+    /* eslint-disable no-debugger */
 
     this.printKey = this.printKey.bind(this);
 
@@ -85,10 +83,21 @@ class Input {
     //     this.updateKeyOnMouseUp();
     //   }
     // });
+
+    this.input = Renderer.createElement('textarea', {
+      id: 'textarea',
+      class: 'keyboard__input',
+      cols: 60,
+      rows: 5,
+      autofocus: true,
+    });
   }
 
-  printKey() {
-    console.log(this.input);
+  printKey({ key }) {
+    insertChar({
+      textarea: this.input,
+      char: key,
+    });
   }
 
   render() {
