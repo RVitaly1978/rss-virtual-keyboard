@@ -3,8 +3,8 @@ import { KeyboardLanguages } from './KeyboardLanguages';
 
 const KeyboardInitState = {
   lang: KeyboardLanguages[0],
-  isCapsLock: false,
-  isShift: false,
+  isCapsLock: true,
+  isShift: true,
 };
 
 export default KeyboardInitState;

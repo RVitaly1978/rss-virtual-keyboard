@@ -1,7 +1,7 @@
 
 .key {
   width: 6.2%;
-  padding: 1rem 0;
+  padding: calc(0.25vh + 0.75rem) 0;
   margin-bottom: 0.5%;
   color: $color-outline;
   background: $color-background-key-main;

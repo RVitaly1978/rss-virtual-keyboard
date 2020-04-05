@@ -391,6 +391,10 @@ const KeyboardLayout = {
   },
 };
 
+const KeyClassName = {
+  active: 'key--active',
+};
+
 const CharKeys = {
   [KeyboardLayout.EN.Tab.type]: '\t',
   [KeyboardLayout.EN.Enter.type]: '\n',
@@ -399,4 +403,5 @@ const CharKeys = {
 export {
   KeyboardLayout,
   CharKeys,
+  KeyClassName,
 };

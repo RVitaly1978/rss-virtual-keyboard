@@ -7,19 +7,19 @@ const KeyCases = {
   UPPER_CASE: 'upperCase',
 };
 
+const SYMBOL = 'symbol';
+const LETTER = 'letter';
+
 function getKeyCase({ state, keyType }) {
   const { isShift, isCapsLock } = state;
 
   switch (keyType) {
-    case 'symbol':
-      if (isShift) {
-        return KeyCases.UPPER_CASE;
-      }
+    case SYMBOL:
+      if (isShift) return KeyCases.UPPER_CASE;
       return KeyCases.LOWER_CASE;
-    case 'letter':
-      if ((isShift && isCapsLock) || (!isShift && !isCapsLock)) {
-        return KeyCases.LOWER_CASE;
-      }
+    case LETTER:
+      if ((isShift && isCapsLock)
+        || (!isShift && !isCapsLock)) return KeyCases.LOWER_CASE;
       return KeyCases.UPPER_CASE;
     default:
       return KeyCases.LOWER_CASE;
@@ -72,6 +72,7 @@ function getKeyContent({ state, button }) {
 
 function getButton(buttons, id) {
   let keyIndex;
+
   buttons.forEach((button, index) => {
     if (button.id === id) {
       keyIndex = index;
