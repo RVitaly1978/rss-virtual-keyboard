@@ -5,11 +5,10 @@ html {
 
 body {
   margin: 0;
-  padding: 2.5% 2.5%;
-  min-height: 100vh;
+  padding: 0;
   box-sizing: border-box;
   background-color: $color-background;
-  @extend %font-main;
+  @extend %font-default;
   color: $color-light;
 }
 

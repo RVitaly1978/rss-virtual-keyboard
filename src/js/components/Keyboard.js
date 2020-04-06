@@ -16,8 +16,9 @@ class Keyboard {
   constructor({ state }) {
     this.state = { ...state };
 
-    this.redrawAllKeys = this.redrawAllKeys.bind(this);
+    this.changeCase = this.changeCase.bind(this);
     this.toggleActiveClass = this.toggleActiveClass.bind(this);
+    this.getButtonById = this.getButtonById.bind(this);
 
     this.keyboardKeys = getKeyboardKeys({
       state: this.state,
@@ -30,7 +31,7 @@ class Keyboard {
     });
   }
 
-  redrawAllKeys(state) {
+  changeCase(state) {
     this.keyboardKeys.forEach((key) => {
       const button = key;
 
@@ -48,6 +49,10 @@ class Keyboard {
     const key = getButton(this.keyboardKeys, id);
 
     key.classList.toggle(active, isTrue);
+  }
+
+  getButtonById(id) {
+    return getButton(this.keyboardKeys, id);
   }
 
   render() {

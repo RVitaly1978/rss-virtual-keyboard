@@ -6,14 +6,9 @@ import {
 
 function insertChar({ textarea, char }) {
   const input = textarea;
-  const { value, selectionStart, selectionEnd } = input;
+  const { selectionStart } = input;
 
-  if (selectionStart !== selectionEnd) {
-    input.value = value.slice(0, selectionStart) + char + value.slice(selectionEnd);
-  } else {
-    input.value = value.slice(0, selectionStart) + char + value.slice(selectionStart);
-  }
-
+  input.setRangeText(char);
   input.selectionStart = selectionStart + 1;
   input.selectionEnd = selectionStart + 1;
 }
@@ -57,31 +52,73 @@ function handlePressDelete({ textarea }) {
   input.selectionEnd = selectionStart;
 }
 
-function handlePressArrowLeft({ textarea }) {
+function handlePressArrowLeft({ textarea, isShift }) {
   const input = textarea;
-  const { selectionStart, selectionEnd } = input;
+  const { selectionStart, selectionEnd, selectionDirection } = input;
 
-  if (selectionStart !== selectionEnd) {
-    input.selectionStart = selectionStart;
-  } else {
+  if (!isShift) {
+    if (selectionStart !== selectionEnd) {
+      input.selectionStart = selectionStart;
+      input.selectionEnd = selectionStart;
+    } else {
+      input.selectionStart = selectionStart - 1;
+      input.selectionEnd = selectionStart - 1;
+    }
+  } else if (selectionDirection === 'forward') {
+    // console.log('ArrowLeft --- forward', selectionStart, selectionEnd, selectionDirection);
+    input.selectionEnd = selectionEnd - 1;
+  } else if (selectionDirection === 'backward') {
+    // console.log('ArrowLeft --- backward', selectionStart, selectionEnd, selectionDirection);
     input.selectionStart = selectionStart - 1;
   }
-
-  input.selectionEnd = selectionStart - 1;
 }
 
-function handlePressArrowRight({ textarea }) {
+function handlePressArrowRight({ textarea, isShift }) {
+  const input = textarea;
+  const { selectionStart, selectionEnd, selectionDirection } = input;
+
+  if (!isShift) {
+    if (selectionStart !== selectionEnd) {
+      input.selectionStart = selectionEnd;
+      input.selectionEnd = selectionEnd;
+    } else {
+      input.selectionStart = selectionStart + 1;
+      input.selectionEnd = selectionStart + 1;
+    }
+  } else if (selectionDirection === 'forward') {
+    input.selectionEnd = selectionEnd + 1;
+  } else if (selectionDirection === 'backward') {
+    input.selectionStart = selectionStart + 1;
+  }
+}
+
+function handlePressArrowUp({ textarea, isShift }) {
   const input = textarea;
   const { selectionStart, selectionEnd } = input;
 
-  if (selectionStart !== selectionEnd) {
-    input.selectionStart = selectionEnd;
-  } else {
-    input.selectionStart = selectionStart + 1;
+  if (!isShift) {
+    input.selectionEnd = 0;
+  } else if (selectionStart !== selectionEnd) {
+    input.selectionEnd = selectionStart;
   }
 
-  input.selectionEnd = selectionStart + 1;
+  input.selectionStart = 0;
 }
+
+function handlePressArrowDown({ textarea, isShift }) {
+  const input = textarea;
+  const { selectionStart, selectionEnd } = input;
+  const { length } = input.value;
+
+  if (!isShift) {
+    input.selectionStart = length;
+  } else if (selectionStart !== selectionEnd) {
+    input.selectionStart = selectionEnd;
+  }
+
+  input.selectionEnd = length;
+}
+
 
 export {
   insertChar,
@@ -91,4 +128,6 @@ export {
   handlePressDelete,
   handlePressArrowLeft,
   handlePressArrowRight,
+  handlePressArrowUp,
+  handlePressArrowDown,
 };
