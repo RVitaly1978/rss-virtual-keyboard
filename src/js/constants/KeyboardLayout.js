@@ -400,8 +400,14 @@ const CharKeys = {
   [KeyboardLayout.EN.Enter.type]: '\n',
 };
 
+const keysToChangeLang = {
+  key1: KeyboardLayout.EN.ControlLeft.type,
+  key2: KeyboardLayout.EN.AltLeft.type,
+};
+
 export {
   KeyboardLayout,
   CharKeys,
   KeyClassName,
+  keysToChangeLang,
 };

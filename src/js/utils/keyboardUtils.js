@@ -28,15 +28,15 @@ function getKeyCase({ state, keyType }) {
 
 function getKeyboardKeys({ state }) {
   const items = [];
-  const { lang } = state;
+  const { language } = state;
 
-  Object.keys(KeyboardLayout[lang]).forEach((key) => {
-    const { type } = KeyboardLayout[lang][key];
+  Object.keys(KeyboardLayout[language]).forEach((key) => {
+    const { type } = KeyboardLayout[language][key];
     const keyCase = getKeyCase({
       state,
       keyType: type,
     });
-    const keyCaseContent = KeyboardLayout[lang][key][keyCase];
+    const keyCaseContent = KeyboardLayout[language][key][keyCase];
 
     const { className } = KeyboardLayout.EN[key];
 
@@ -56,17 +56,17 @@ function getKeyboardKeys({ state }) {
 }
 
 function getKeyContent({ state, button }) {
-  const { lang } = state;
+  const { language } = state;
   const { name: key } = button;
 
-  const { type } = KeyboardLayout[lang][key];
+  const { type } = KeyboardLayout[language][key];
 
   const keyCase = getKeyCase({
     state,
     keyType: type,
   });
 
-  const keyCaseContent = KeyboardLayout[lang][key][keyCase];
+  const keyCaseContent = KeyboardLayout[language][key][keyCase];
   return keyCaseContent;
 }
 
@@ -82,15 +82,15 @@ function getButton(buttons, id) {
   return buttons[keyIndex];
 }
 
-function toggleKeyClass(buttons, id, isMousedown) {
-  const button = getButton(buttons, id);
-  button.classList.toggle('key--active', isMousedown);
-}
+// function toggleKeyClass(buttons, id, isMousedown) {
+//   const button = getButton(buttons, id);
+//   button.classList.toggle('key--active', isMousedown);
+// }
 
 export {
   getKeyCase,
   getKeyboardKeys,
   getKeyContent,
   getButton,
-  toggleKeyClass,
+  // toggleKeyClass,
 };
