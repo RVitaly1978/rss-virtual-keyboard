@@ -8,7 +8,6 @@ class Renderer {
   render(Component) {
     const component = new Component();
     this.root.append(component.render());
-    // component.didMount();
   }
 
   static updateElement(parentNode, newChild, oldChild) {

@@ -82,15 +82,9 @@ function getButton(buttons, id) {
   return buttons[keyIndex];
 }
 
-// function toggleKeyClass(buttons, id, isMousedown) {
-//   const button = getButton(buttons, id);
-//   button.classList.toggle('key--active', isMousedown);
-// }
-
 export {
   getKeyCase,
   getKeyboardKeys,
   getKeyContent,
   getButton,
-  // toggleKeyClass,
 };

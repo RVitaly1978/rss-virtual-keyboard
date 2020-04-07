@@ -135,7 +135,6 @@ function handlePressArrowDown({ textarea, isShift }) {
   input.selectionEnd = length;
 }
 
-
 export {
   insertChar,
   handlePressTab,

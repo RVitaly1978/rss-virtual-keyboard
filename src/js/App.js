@@ -11,7 +11,7 @@ import {
   KeyboardLayout,
   keysToChangeLang,
   isKeyInKeyboard,
-  // stickingKeys,
+  stickingKeys,
 } from './constants/KeyboardLayout';
 import { getNextLanguage } from './constants/KeyboardLanguages';
 
@@ -35,7 +35,7 @@ class App {
   constructor() {
     this.state = new State({ ...state });
     this.pressed = new Set();
-    // this.sticking = false;
+    this.sticking = false;
 
     this.setState = this.setState.bind(this);
     this.saveStateToLocalStorage = this.saveStateToLocalStorage.bind(this);
@@ -222,9 +222,9 @@ class App {
     this.textInputRendered.focus();
     const { id } = target;
 
-    // if (this.sticking === target) {
-    //   return;
-    // }
+    if (this.sticking === target) {
+      return;
+    }
 
     this.pressed.delete(id);
 
@@ -283,16 +283,19 @@ class App {
     this.keyboardRendered.addEventListener('mousedown', (evt) => {
       if (evt.target.tagName !== 'BUTTON') return;
 
-      // if ((Object.values(stickingKeys).includes(evt.target.id))
-      // && (!this.sticking)) {
-      //   this.sticking = evt.target;
-      // } else if (this.sticking) {
-      //   const target = this.sticking;
-      //   this.sticking = false;
-      //   this.onMousedown(evt.target);
-      //   this.onMouseup(target);
-      //   return;
-      // }
+      if ((Object.values(stickingKeys).includes(evt.target.id))
+      && (!this.sticking)) {
+        this.sticking = evt.target;
+      } else if (this.sticking) {
+        const target = this.sticking;
+        this.sticking = false;
+        this.onMousedown(evt.target);
+        this.onMouseup(target);
+
+        this.keyboard.toggleActiveClass(SHIFT_LEFT, false);
+        this.keyboard.toggleActiveClass(SHIFT_RIGHT, false);
+        return;
+      }
 
       this.onMousedown(evt.target);
     });
@@ -311,6 +314,14 @@ class App {
     document.addEventListener('keydown', (evt) => {
       evt.preventDefault();
       if (!isKeyInKeyboard(evt)) return;
+
+      if (this.sticking) {
+        const target = this.sticking;
+        this.sticking = false;
+        this.onKeydown(evt);
+        this.onMouseup(target);
+        return;
+      }
 
       this.onKeydown(evt);
     });
