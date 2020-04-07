@@ -7,7 +7,12 @@ import Input from './components/Input';
 import Descriptions from './components/Descriptions';
 import KeyboardInitState from './constants/KeyboardInitState';
 
-import { KeyboardLayout, keysToChangeLang } from './constants/KeyboardLayout';
+import {
+  KeyboardLayout,
+  keysToChangeLang,
+  isKeyInKeyboard,
+  // stickingKeys,
+} from './constants/KeyboardLayout';
 import { getNextLanguage } from './constants/KeyboardLanguages';
 
 const CAPS_LOCK = KeyboardLayout.EN.CapsLock.type;
@@ -30,6 +35,7 @@ class App {
   constructor() {
     this.state = new State({ ...state });
     this.pressed = new Set();
+    // this.sticking = false;
 
     this.setState = this.setState.bind(this);
     this.saveStateToLocalStorage = this.saveStateToLocalStorage.bind(this);
@@ -213,23 +219,16 @@ class App {
   }
 
   onMouseup(target) {
+    this.textInputRendered.focus();
     const { id } = target;
 
-    // if ((id !== SHIFT_LEFT)
-    //   && (id !== SHIFT_RIGHT)
-    //   && (id !== keysToChangeLang.key1)
-    //   && (id !== keysToChangeLang.key2)) {
-    //   this.pressed.delete(id);
+    // if (this.sticking === target) {
+    //   return;
     // }
+
     this.pressed.delete(id);
 
-    if (id === CAPS_LOCK) {
-      // || (id === SHIFT_LEFT)
-      // || (id === SHIFT_RIGHT)
-      // || (id === keysToChangeLang.key1)
-      // || (id === keysToChangeLang.key2)) {
-      return;
-    }
+    if (id === CAPS_LOCK) return;
 
     const { isShift } = this.state.getState();
     if ((id === SHIFT_LEFT) && (!isShift)) return;
@@ -283,6 +282,18 @@ class App {
 
     this.keyboardRendered.addEventListener('mousedown', (evt) => {
       if (evt.target.tagName !== 'BUTTON') return;
+
+      // if ((Object.values(stickingKeys).includes(evt.target.id))
+      // && (!this.sticking)) {
+      //   this.sticking = evt.target;
+      // } else if (this.sticking) {
+      //   const target = this.sticking;
+      //   this.sticking = false;
+      //   this.onMousedown(evt.target);
+      //   this.onMouseup(target);
+      //   return;
+      // }
+
       this.onMousedown(evt.target);
     });
 
@@ -299,11 +310,15 @@ class App {
 
     document.addEventListener('keydown', (evt) => {
       evt.preventDefault();
+      if (!isKeyInKeyboard(evt)) return;
+
       this.onKeydown(evt);
     });
 
     document.addEventListener('keyup', (evt) => {
       evt.preventDefault();
+      if (!isKeyInKeyboard(evt)) return;
+
       this.onKeyup(evt);
     });
 

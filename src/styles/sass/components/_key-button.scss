@@ -82,7 +82,7 @@
     border: 1px solid $color-background-key-active;
     box-shadow: 0px 0px 15px $color-outline;
     font-weight: 700;
-    color: $color-dark;
+    color: $color-active;
     @extend %transition-active;
     outline: none;
   }

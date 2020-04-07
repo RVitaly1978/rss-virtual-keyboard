@@ -405,9 +405,23 @@ const keysToChangeLang = {
   key2: KeyboardLayout.EN.AltLeft.type,
 };
 
+const stickingKeys = {
+  changeLangKey1: keysToChangeLang.key1,
+  changeLangKey2: keysToChangeLang.key2,
+  shiftLeft: KeyboardLayout.EN.ShiftLeft.type,
+  shiftRight: KeyboardLayout.EN.ShiftRight.type,
+};
+
+function isKeyInKeyboard(evt) {
+  const { code } = evt;
+  return Object.prototype.hasOwnProperty.call(KeyboardLayout.EN, code);
+}
+
 export {
   KeyboardLayout,
   CharKeys,
   KeyClassName,
   keysToChangeLang,
+  isKeyInKeyboard,
+  stickingKeys,
 };
