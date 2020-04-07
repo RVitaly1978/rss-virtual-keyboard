@@ -6,7 +6,7 @@
     "style": "sass --watch ./src/styles/style.scss ./src/styles/style.css",
     "start": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.js",
     "build": "cross-env NODE_ENV=production webpack --config config/webpack.prod.js",
-    "deploy": "npm run build && netlify deploy --prod",
+    "deploy": "npm run build && netlify deploy --dir=dist --prod",
     "lint": "eslint ./src/**/**/*.js"
   },
   "author": "Raichau Vitaly",

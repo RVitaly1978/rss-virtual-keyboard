@@ -2,16 +2,20 @@
 .keyboard__input {
   display: block;
   width: 100%;
-  height: 15vh;
+  height: 25vh;
   margin-bottom: 1rem;
   padding: 1rem;
   border-radius: 4px;
   font-family: inherit;
-  @include font ($size: calc(1.2vw + 0.6rem), $height: 1.2, $weight: 400);
-  color: $color-dark;
+  @include font ($size: calc(1.5vw + 1rem), $height: 1.2, $weight: 400);
+  color: $color-inactive;
   background-color: $color-background-textarea;
-  box-shadow: inset 0px 0px 5px $color-border-key, 0px 0px 7px $color-outline;
+  box-shadow: 0px 0px 1px $color-outline;
   resize: none;
+
+  &::selection {
+    background-color: $color-background-key-main;
+  }
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -32,6 +36,7 @@
   }
 
   &:focus {
-    outline: 2px auto $color-outline;
+    color: $color-active;
+    box-shadow: 0px 0px 10px $color-outline;
   }
 }

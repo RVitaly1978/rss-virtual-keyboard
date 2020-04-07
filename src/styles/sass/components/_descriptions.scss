@@ -20,14 +20,14 @@
   flex-wrap: wrap;
   border-radius: 4px;
   background: $color-background-descriptions;
-  box-shadow: 0px 0px 5px $color-border-key;
+  box-shadow: 0px 0px 15px $color-outline;
   cursor: pointer;
   overflow: hidden;
   z-index: $z-index-notes;
   @extend %transition-notes;
 
   &--show {
-    height: calc((15vh + 1rem) + (1.2vw + 0.6rem + 0.5vh + 1.5rem + 0.5vh) * 5);
+    height: calc((25vh + 1rem) + (1.2vw + 0.6rem + 0.5vh + 1.5rem + 0.5vh) * 5);
   }
 
   &--visible {
@@ -79,8 +79,17 @@
   }
 
   &--active {
-    background: $color-background-key-add;
+    background: $color-outline;
+    border-color: $color-outline;
+    color: $color-active;
+    box-shadow: 0px 0px 15px $color-outline;
     outline: none;
     @extend %transition-active;
+  }
+
+  @include media-hover {
+    &--active:hover {
+      background: $color-outline;
+    }
   }
 }

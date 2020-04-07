@@ -76,11 +76,11 @@
     width: 48.0%;
   }
   
-  // &:active,
   &--active {
     background: $color-background-key-active;
     border-radius: 18px;
     border: 1px solid $color-background-key-active;
+    box-shadow: 0px 0px 15px $color-outline;
     font-weight: 700;
     color: $color-dark;
     @extend %transition-active;

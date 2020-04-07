@@ -1,7 +1,7 @@
 
 // Color
-  $color-background: darkgrey;
-  $color-background-textarea: rgba(255, 255, 255, 0.4);
+  $color-background: rgba(0, 0, 0, 0.6);
+  $color-background-textarea: rgba(255, 255, 255, 0.6);
   $color-background-key-main: rgba(0, 0, 0, 0.4);
   $color-background-key-add: rgba(0, 0, 0, 0.6);
   $color-background-key-hover: rgba(0, 0, 0, 0.9);
@@ -12,7 +12,9 @@
 
   $color-outline: #FBC65F;
   $color-dark: #000000;
-  $color-light: #ffffff;
+  $color-light: rgba(255, 255, 255, 0.9);
+  $color-inactive: rgba(0, 0, 0, 0.2);
+  $color-active: rgba(0, 0, 0, 0.8);
 
 // Content width
   $content-max-width: 1020px;
