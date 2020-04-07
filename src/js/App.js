@@ -213,7 +213,6 @@ class App {
   }
 
   onMouseup(target) {
-    this.textInputRendered.focus();
     const { id } = target;
 
     // if ((id !== SHIFT_LEFT)
@@ -306,6 +305,12 @@ class App {
     document.addEventListener('keyup', (evt) => {
       evt.preventDefault();
       this.onKeyup(evt);
+    });
+
+    this.textInputRendered.addEventListener('blur', () => {
+      if (this.pressed.size !== 0) {
+        this.textInputRendered.focus();
+      }
     });
 
     window.addEventListener('blur', () => {
