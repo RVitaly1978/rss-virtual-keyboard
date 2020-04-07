@@ -22,3 +22,7 @@
 %transition-active {
   transition: border-radius 0.1s ease, color 0.1s ease, background-color 0.1s ease, font-weight 0.1s ease;
 }
+
+%transition-notes {
+  transition: height 0.3s linear;
+}

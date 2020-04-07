@@ -4,9 +4,9 @@ import Renderer from './dom/Renderer';
 import State from './components/State';
 import Keyboard from './components/Keyboard';
 import Input from './components/Input';
+import Descriptions from './components/Descriptions';
 import KeyboardInitState from './constants/KeyboardInitState';
 
-import { getDescriptionsItems } from './constants/KeyboardDescriptions';
 import { KeyboardLayout, keysToChangeLang } from './constants/KeyboardLayout';
 import { getNextLanguage } from './constants/KeyboardLanguages';
 
@@ -38,8 +38,10 @@ class App {
     this.onCapsLockPress = this.onCapsLockPress.bind(this);
     this.onShiftPress = this.onShiftPress.bind(this);
     this.onChangeLangKeyPress = this.onChangeLangKeyPress.bind(this);
-    this.onMetaPress = this.onMetaPress.bind(this);
     this.onArrowPress = this.onArrowPress.bind(this);
+    this.onMetaPress = this.onMetaPress.bind(this);
+    this.onCtrlPress = this.onCtrlPress.bind(this);
+    this.onAltPress = this.onAltPress.bind(this);
     this.onPrintableKeyPress = this.onPrintableKeyPress.bind(this);
     this.onMousedown = this.onMousedown.bind(this);
     this.onMouseup = this.onMouseup.bind(this);
@@ -50,11 +52,7 @@ class App {
     this.state.subscribe(this.saveStateToLocalStorage);
     this.state.subscribe(this.changeKeysCases);
 
-    this.descriptions = Renderer.createElement('div', {
-      id: 'descriptions',
-      class: 'descriptions__container',
-      children: getDescriptionsItems(),
-    });
+    this.descriptions = new Descriptions();
 
     this.textInput = new Input();
 
@@ -119,6 +117,16 @@ class App {
   }
 
   onMetaPress(target) {
+    const { id } = target;
+    this.keyboard.toggleActiveClass(id, true);
+  }
+
+  onCtrlPress(target) {
+    const { id } = target;
+    this.keyboard.toggleActiveClass(id, true);
+  }
+
+  onAltPress(target) {
     const { id } = target;
     this.keyboard.toggleActiveClass(id, true);
   }
@@ -193,6 +201,12 @@ class App {
       case META_LEFT:
         this.onMetaPress(target);
         break;
+      case CTRL_RIGHT:
+        this.onCtrlPress(target);
+        break;
+      case ALT_RIGHT:
+        this.onAltPress(target);
+        break;
       default:
         this.onPrintableKeyPress(target);
     }
@@ -259,12 +273,14 @@ class App {
   onWindowBlur() {
     this.pressed.forEach((key) => {
       this.keyboard.toggleActiveClass(key, false);
+      this.pressed.delete(key);
     });
   }
 
   render() {
-    this.keyboardRendered = this.keyboard.render();
     this.textInputRendered = this.textInput.render();
+    this.keyboardRendered = this.keyboard.render();
+    this.descriptionsRendered = this.descriptions.render();
 
     this.keyboardRendered.addEventListener('mousedown', (evt) => {
       if (evt.target.tagName !== 'BUTTON') return;
@@ -301,7 +317,7 @@ class App {
       children: [
         this.textInputRendered,
         this.keyboardRendered,
-        this.descriptions,
+        this.descriptionsRendered,
       ],
     });
 
