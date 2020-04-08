@@ -1,0 +1,59 @@
+
+html {
+  font-size: 10px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: $color-background;
+  @extend %font-default;
+  color: $color-light;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+:focus {
+  outline: 1px auto $color-outline;
+}
+
+h1 {
+  margin: 0;
+  padding: 0;
+  font-size: 0;
+  line-height: 0;
+}
+
+h2 {
+  margin: 0;
+  padding: 0;
+  @include font ($size: 1.8rem, $height: 1.2, $weight: 700);
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: inherit;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: inherit;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
