@@ -1,7 +1,6 @@
 
 import Renderer from '../dom/Renderer';
 
-import Button from './Button';
 import { getDescriptionsItems } from '../constants/KeyboardDescriptions';
 
 const SHOW_DESCRIPTION = '▲ show description ▲';
@@ -19,12 +18,10 @@ class Descriptions {
     this.handleButtonClick = this.handleButtonClick.bind(this);
     this.onMousedown = this.onMousedown.bind(this);
 
-    this.showButton = Button({
-      params: {
-        idElem: 'descriptions-button',
-        classElem: 'descriptions__button',
-      },
-      inner: [SHOW_DESCRIPTION],
+    this.showButton = Renderer.createElement('button', {
+      id: 'descriptions-button',
+      class: 'descriptions__button',
+      children: [SHOW_DESCRIPTION],
     });
 
     this.notes = Renderer.createElement('div', {

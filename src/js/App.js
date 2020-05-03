@@ -176,45 +176,25 @@ class App {
 
     this.pressed.add(id);
 
-    switch (id) {
-      case CAPS_LOCK:
-        this.onCapsLockPress(target);
-        break;
-      case SHIFT_LEFT:
-        this.onShiftPress(target);
-        break;
-      case SHIFT_RIGHT:
-        this.onShiftPress(target);
-        break;
-      case keysToChangeLang.key1:
-        this.onChangeLangKeyPress(target);
-        break;
-      case keysToChangeLang.key2:
-        this.onChangeLangKeyPress(target);
-        break;
-      case ARROW_LEFT:
-        this.onArrowPress(target);
-        break;
-      case ARROW_RIGHT:
-        this.onArrowPress(target);
-        break;
-      case ARROW_UP:
-        this.onArrowPress(target);
-        break;
-      case ARROW_DOWN:
-        this.onArrowPress(target);
-        break;
-      case META_LEFT:
-        this.onMetaPress(target);
-        break;
-      case CTRL_RIGHT:
-        this.onCtrlPress(target);
-        break;
-      case ALT_RIGHT:
-        this.onAltPress(target);
-        break;
-      default:
-        this.onPrintableKeyPress(target);
+    const keyAction = {
+      [CAPS_LOCK]: this.onCapsLockPress,
+      [SHIFT_LEFT]: this.onShiftPress,
+      [SHIFT_RIGHT]: this.onShiftPress,
+      [keysToChangeLang.key1]: this.onChangeLangKeyPress,
+      [keysToChangeLang.key2]: this.onChangeLangKeyPress,
+      [ARROW_LEFT]: this.onArrowPress,
+      [ARROW_RIGHT]: this.onArrowPress,
+      [ARROW_UP]: this.onArrowPress,
+      [ARROW_DOWN]: this.onArrowPress,
+      [META_LEFT]: this.onMetaPress,
+      [CTRL_RIGHT]: this.onCtrlPress,
+      [ALT_RIGHT]: this.onAltPress,
+    };
+
+    if (keyAction[id]) {
+      keyAction[id](target);
+    } else {
+      this.onPrintableKeyPress(target);
     }
   }
 

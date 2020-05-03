@@ -46,43 +46,31 @@ class Input {
   changeCursorPosition(key, isShift) {
     const { id } = key;
 
-    switch (id) {
-      case ARROW_LEFT:
-        handlePressArrowLeft({ textarea: this.input, isShift });
-        break;
-      case ARROW_RIGHT:
-        handlePressArrowRight({ textarea: this.input, isShift });
-        break;
-      case ARROW_UP:
-        handlePressArrowUp({ textarea: this.input, isShift });
-        break;
-      case ARROW_DOWN:
-        handlePressArrowDown({ textarea: this.input, isShift });
-        break;
-      default:
-        break;
-    }
+    const arrowAction = {
+      [ARROW_LEFT]: handlePressArrowLeft,
+      [ARROW_RIGHT]: handlePressArrowRight,
+      [ARROW_UP]: handlePressArrowUp,
+      [ARROW_DOWN]: handlePressArrowDown,
+    };
+
+    arrowAction[id]({ textarea: this.input, isShift });
   }
 
   handlePressedKeys(key) {
     const { id } = key;
     const { textContent: char } = key;
 
-    switch (id) {
-      case TAB:
-        handlePressTab({ textarea: this.input });
-        break;
-      case ENTER:
-        handlePressEnter({ textarea: this.input });
-        break;
-      case BACKSPACE:
-        handlePressBackspace({ textarea: this.input });
-        break;
-      case DELETE:
-        handlePressDelete({ textarea: this.input });
-        break;
-      default:
-        insertChar({ textarea: this.input, char });
+    const keyAction = {
+      [TAB]: handlePressTab,
+      [ENTER]: handlePressEnter,
+      [BACKSPACE]: handlePressBackspace,
+      [DELETE]: handlePressDelete,
+    };
+
+    if (keyAction[id]) {
+      keyAction[id]({ textarea: this.input });
+    } else {
+      insertChar({ textarea: this.input, char });
     }
   }
 

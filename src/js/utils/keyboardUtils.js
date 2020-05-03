@@ -1,6 +1,7 @@
 
+import Renderer from '../dom/Renderer';
+
 import { KeyboardLayout } from '../constants/KeyboardLayout';
-import Button from '../components/Button';
 
 const KeyCases = {
   LOWER_CASE: 'lowerCase',
@@ -40,13 +41,11 @@ function getKeyboardKeys({ state }) {
 
     const { className } = KeyboardLayout.EN[key];
 
-    const button = Button({
-      params: {
-        idElem: key,
-        nameElem: key,
-        classElem: className,
-      },
-      inner: [keyCaseContent],
+    const button = Renderer.createElement('button', {
+      id: key,
+      name: key,
+      class: className,
+      children: [keyCaseContent],
     });
 
     items.push(button);
